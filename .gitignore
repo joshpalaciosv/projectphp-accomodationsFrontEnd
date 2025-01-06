@@ -1,0 +1,8 @@
+/vendor
+index.php
+tabletestes.php
+querybuildertests.php
+composer.lock
+
+# Environment variables
+.env
