@@ -3,10 +3,19 @@
 //require_once '../classes/Usuario.php';
 require 'src/classes/Usuario.php';
 
+use PHPSupabase\Service;
+
 class UsuarioController {
     private $db;
 
-    public function __construct($db) {
+    //public function __construct($db) {
+    public function __construct() {
+        $apiKey = getenv('VITE_SUPABASE_ANON_KEY');
+        $apiUrl = getenv('VITE_SUPABASE_URL');
+        $supabasePublicKey = getenv('SUPABASE_JWT_SECRET');
+
+        $service = new Service($apiKey, $apiUrl);
+        $db = $service->initializeDatabase('usuarios');
         $this->db = $db;
     }
 

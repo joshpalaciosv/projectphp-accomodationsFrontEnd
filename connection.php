@@ -2,12 +2,24 @@
 
     require 'vendor/autoload.php';
     require 'src/classes/Usuario.php';
+    require 'src/classes/Accommodation.php';
 
     use PHPSupabase\Service;
+    use Dotenv\Dotenv;
 
+    // Load environment variables from .env file
+    $dotenv = Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
     // Replace with your actual Supabase API key and URL
-    $apiKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    $apiUrl = import.meta.env.VITE_SUPABASE_URL;
+    // Access environment variables using $_ENV
+    $apiKey = $_ENV['VITE_SUPABASE_ANON_KEY'] ?? null;
+    $apiUrl = $_ENV['VITE_SUPABASE_URL'] ?? null;
+
+    if (!$apiKey || !$apiUrl) {
+        die('Environment variables VITE_SUPABASE_ANON_KEY or VITE_SUPABASE_URL are not set.');
+    }
+
+    echo $apiKey;
 
     // Create a Service instance
     $service = new Service($apiKey, $apiUrl);
@@ -15,14 +27,28 @@
     // Example: Create an Auth instance and sign in a user
     $auth = $service->createAuth();
     try {
-        $auth->signInWithEmailAndPassword('jshpalacios@gmail.com', '123456');
+        $auth->signInWithEmailAndPassword('admin@example.com', '123456');
         $data = $auth->data();
         echo 'User signed in successfully. Access token: ' . $data->access_token;
     } catch (Exception $e) {
         echo 'Error: ' . $auth->getError();
     }
 
-    
+  
+    $db = $service->initializeDatabase('accommodations');
+    $accommodation = new Accommodation($db);
+    // Leer todos los usuarios
+    $accommodations = $accommodation->read();
+    print_r($accommodations);
+   
+
+        /*
+    $db = $service->initializeDatabase('usuarios');
+    $usuario = new Usuario($db);
+    // Leer todos los usuarios
+    $usuarios = $usuario->read();
+    print_r($usuarios);
+    */
 
     /*
 
